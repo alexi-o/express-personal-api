@@ -12,7 +12,7 @@ app.use(bodyParser.json());
  * DATABASE *
  ************/
 
-// var db = require('./models');
+var db = require('./models');
 
 /**********
  * ROUTES *
@@ -26,8 +26,8 @@ app.use(express.static('public'));
  * HTML Endpoints
  */
 
-app.get('/', function homepage(req, res) {
-  res.sendFile(__dirname + '/views/index.html');
+app.get('/', function (req, res) {
+  res.sendFile('view.index.html', { root : __dirname});
 });
 
 
@@ -50,8 +50,30 @@ app.get('/api', function api_index(req, res) {
   })
 });
 
-app.get('/api/profile', function index(req, res){
-  res.json(personal_api);
+app.get('/api/profile', function (req, res){
+  res.json({
+    name: "Alexi",
+  github_link: "https://github.com/alexi-o/",
+  current_city: "Denver",
+  pets: [
+    {name: "Willow",
+    type: "Dog",
+    breed: "Lab" }
+  ]
+})
+});
+
+app.get('/api/projects', function (req, res) {
+  db.Project.find().populate('projects')
+    .exec(function(err, projects) {
+      if (err) { return console.log("index error: " + err); }
+      res.json(projects);
+    })
+})
+
+app.get('/api/projects', function (req, res) {
+  console.log('projects index');
+  res.json(projects);
 })
 
 /**********
