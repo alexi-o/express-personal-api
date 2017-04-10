@@ -51,7 +51,7 @@ app.get('/api', function api_index(req, res) {
 });
 
 app.get('/api/profile', function index(req, res){
-
+  res.json(personal_api);
 })
 
 /**********
