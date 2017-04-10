@@ -39,16 +39,20 @@ app.get('/api', function api_index(req, res) {
   // TODO: Document all your api endpoints below
   res.json({
     woops_i_has_forgot_to_document_all_my_endpoints: true, // CHANGE ME ;)
-    message: "Welcome to my personal api! Here's what you need to know!",
+    message: "Welcome to Alexi's first api! Here's what you need to know!",
     documentation_url: "https://github.com/alexi-o/express-personal-api", 
     base_url: "https://mighty-basin-46898.herokuapp.com", 
     endpoints: [
       {method: "GET", path: "/api", description: "Describes all available endpoints"},
-      {method: "GET", path: "/api/profile", description: "Data about me"}, // CHANGE ME
-      {method: "POST", path: "/api/campsites", description: "E.g. Create a new campsite"} // CHANGE ME
+      {method: "GET", path: "/api/profile", description: "Data about me"}, 
+      {method: "POST", path: "/api/projects", description: "E.g. Create a new project"}
     ]
   })
 });
+
+app.get('/api/profile', function index(req, res){
+
+})
 
 /**********
  * SERVER *
