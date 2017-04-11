@@ -66,13 +66,12 @@ app.get('/api/profile', function (req, res){
 });
 
 //Gets all of the projects
-app.get('/api/projects', function (req, res) {
-  db.Project.find()
-    .exec(function(err, projects) {
-      if (err) { return console.log("error: " + err); }
-      res.json(projects);
-    });
-});
+app.get('/api/projects', function(req, res){
+  db.Project.find({}, function(err, projects){
+    if (err) { console.log('error: ', err);}
+    res.json(projects);
+  })
+})
 
 //Gets one project
 app.get('/api/projects/:id', function (req, res) {
@@ -94,6 +93,13 @@ app.post('/api/projects', function (req, res) {
     }
     console.log("saved ", project.name);
     res.json(project);
+  });
+});
+//Deletes a project
+app.delete('/api/projects/:_id', function(req, res){
+  var projectId = req.params._id;
+  db.Project.findOneAndRemove({_id: projectId}, function(err, deletedProject){
+    res.json(deletedProject);
   });
 });
 
