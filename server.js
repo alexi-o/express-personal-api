@@ -26,8 +26,8 @@ app.use(express.static('public'));
  * HTML Endpoints
  */
 
-app.get('/', function (req, res) {
-  res.sendFile('view.index.html', { root : __dirname});
+app.get('/', function homepage(req, res) {
+  res.sendFile(__dirname + '/views/index.html');
 });
 
 
@@ -38,18 +38,20 @@ app.get('/', function (req, res) {
 app.get('/api', function api_index(req, res) {
   // TODO: Document all your api endpoints below
   res.json({
-    woops_i_has_forgot_to_document_all_my_endpoints: true, // CHANGE ME ;)
+    woops_i_has_forgot_to_document_all_my_endpoints: false,
     message: "Welcome to Alexi's first api! Here's what you need to know!",
     documentation_url: "https://github.com/alexi-o/express-personal-api", 
     base_url: "https://mighty-basin-46898.herokuapp.com", 
     endpoints: [
       {method: "GET", path: "/api", description: "Describes all available endpoints"},
       {method: "GET", path: "/api/profile", description: "Data about me"}, 
-      {method: "POST", path: "/api/projects", description: "E.g. Create a new project"}
+      {method: "POST", path: "/api/projects", description: "Creates a new project"},
+      {method: "PUT", path: "api/projects/:id", description: "Updates existing project"},
+      {method: "DELETE", path: "api/projects/:id", description: "Deletes a project"}
     ]
   })
 });
-
+//Main profile page
 app.get('/api/profile', function (req, res){
   res.json({
     name: "Alexi",
@@ -63,18 +65,37 @@ app.get('/api/profile', function (req, res){
 })
 });
 
+//Gets all of the projects
 app.get('/api/projects', function (req, res) {
-  db.Project.find().populate('projects')
+  db.Project.find()
     .exec(function(err, projects) {
-      if (err) { return console.log("index error: " + err); }
+      if (err) { return console.log("error: " + err); }
       res.json(projects);
-    })
-})
+    });
+});
 
-app.get('/api/projects', function (req, res) {
-  console.log('projects index');
-  res.json(projects);
-})
+//Gets one project
+app.get('/api/projects/:id', function (req, res) {
+  db.Project.findOne({_id: req.params.id}, function(err, data){
+    res.json(data);
+  });
+});
+
+//Creates new projects
+app.post('/api/projects', function (req, res) {
+  var newProject = new db.Project({
+    name: req.body.name,
+    description: req.body.description,
+    url: req.body.url
+  });
+  newProject.save(function(err, project){
+    if(err){
+      return console.log("error: " + err);
+    }
+    console.log("saved ", project.name);
+    res.json(project);
+  });
+});
 
 /**********
  * SERVER *
